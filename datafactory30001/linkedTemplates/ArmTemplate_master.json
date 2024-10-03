@@ -1,0 +1,118 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "datafactory30001"
+		},
+		"appdb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'appdb'"
+		},
+		"appvmfs_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'appvmfs'"
+		},
+		"datalake45001_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'datalake45001'"
+		},
+		"udazuresynapsews_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'udazuresynapsews'"
+		},
+		"udazuresynapsews_datapool_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'udazuresynapsews_datapool'"
+		},
+		"appvmfs_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\inetpub\\logs\\LogFiles\\W3SVC1"
+		},
+		"appvmfs_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "appadmin"
+		},
+		"datalake45001_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://datalake45001.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "datafactory30001_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"appdb_connectionString": {
+						"value": "[parameters('appdb_connectionString')]"
+					},
+					"datalake45001_accountKey": {
+						"value": "[parameters('datalake45001_accountKey')]"
+					},
+					"udazuresynapsews_connectionString": {
+						"value": "[parameters('udazuresynapsews_connectionString')]"
+					},
+					"udazuresynapsews_datapool_connectionString": {
+						"value": "[parameters('udazuresynapsews_datapool_connectionString')]"
+					},
+					"datalake45001_properties_typeProperties_url": {
+						"value": "[parameters('datalake45001_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "datafactory30001_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"appvmfs_password": {
+						"value": "[parameters('appvmfs_password')]"
+					},
+					"appvmfs_properties_typeProperties_host": {
+						"value": "[parameters('appvmfs_properties_typeProperties_host')]"
+					},
+					"appvmfs_properties_typeProperties_userId": {
+						"value": "[parameters('appvmfs_properties_typeProperties_userId')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'datafactory30001_ArmTemplate_0')]"
+			]
+		}
+	]
+}
