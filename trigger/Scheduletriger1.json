@@ -1,0 +1,24 @@
+{
+	"name": "Scheduletriger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1-CSV-Pool",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 5,
+				"startTime": "2024-10-03T15:49:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
