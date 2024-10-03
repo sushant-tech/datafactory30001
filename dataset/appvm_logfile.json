@@ -1,0 +1,17 @@
+{
+	"name": "appvm_logfile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "appvmfs",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

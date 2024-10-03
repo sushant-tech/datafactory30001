@@ -1,0 +1,80 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "datalake45001_logdatafile",
+						"type": "DatasetReference"
+					},
+					"name": "logfilestream"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "udazuresynapsews_datapool_weblogs",
+						"type": "DatasetReference"
+					},
+					"name": "WeblogSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "RenameColumn"
+				},
+				{
+					"name": "splitlogdata"
+				},
+				{
+					"name": "MapColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {#Software: Microsoft Internet Information Services 10.0} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     skipLines: 4) ~> logfilestream",
+				"logfilestream select(mapColumn(",
+				"          logdata = {#Software: Microsoft Internet Information Services 10.0}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RenameColumn",
+				"RenameColumn derive(logdata = split(logdata,\" \")) ~> splitlogdata",
+				"splitlogdata derive(LogDate = logdata[1],",
+				"          IPAddress = logdata[9],",
+				"          RequestMethod = logdata[4],",
+				"          RequestResource = logdata[5]) ~> MapColumns",
+				"MapColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          LogDate as date,",
+				"          IPAddress as string,",
+				"          RequestMethod as string,",
+				"          RequestResource as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          LogDate,",
+				"          IPAddress,",
+				"          RequestMethod,",
+				"          RequestResource",
+				"     )) ~> WeblogSink"
+			]
+		}
+	}
+}

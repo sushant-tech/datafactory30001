@@ -1,0 +1,12 @@
+{
+	"name": "udazuresynapsews",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=udazuresynapsews.sql.azuresynapse.net;initial catalog=datapool;user id=sqladminuser",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEFDN0I5M0Y2LTRBMDEtNEU0QS1CQUE5LThDM0FENDI1NTE2Ml9iYzA2NjhkMy1iYjY1LTRlMjMtYjRlOC1jZjFkZWE4YTQxY2UiDQp9"
+		}
+	}
+}

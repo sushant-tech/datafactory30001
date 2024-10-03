@@ -1,0 +1,232 @@
+{
+	"name": "01-Pipeline-TransfertoPool",
+	"properties": {
+		"activities": [
+			{
+				"name": "01-Activity-CSV-Parquet",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "datalake45001_data_Activitylog_csv",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "datalake45001_parquet_dataActivity_parquet",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "01-Activity-Parquet-Pool",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "01-Activity-CSV-Parquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Correlationid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Correlationid",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Operationname",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Operationname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Eventcategory",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Eventcategory",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Level",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Level",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Time",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Time",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Subscription",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Subscription",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Eventinitiatedby",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Eventinitiatedby",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Resourcetype",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Resourcetype",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Resourcegroup",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Resourcegroup",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Resource",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Resource",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "datalake45001_parquet_dataActivity_parquet",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "workspacedatapool_activity",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-09-28T11:18:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

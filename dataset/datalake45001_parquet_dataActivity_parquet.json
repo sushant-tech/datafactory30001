@@ -1,0 +1,20 @@
+{
+	"name": "datalake45001_parquet_dataActivity_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake45001",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "parquet"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
